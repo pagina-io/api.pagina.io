@@ -6,6 +6,17 @@ class Jikkyll < Sinatra::Base
   use Rack::PostBodyContentTypeParser
 
   helpers JikkyllHelpers
+  register REST
+
+  before do
+    content_type :json
+    headers(
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    )
+  end
+
+  set :protection, false
 
   get '/' do
     api_response({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] })
@@ -19,7 +30,7 @@ class Jikkyll < Sinatra::Base
   get '/auth/github/callback' do
     access_token = get_access_token(params[:code])
     gh_user = github_client(access_token).user
-    user = User.where(github_id: gh_user[:id]).first
+    user = User.first(github_id: gh_user[:id])
 
     if user
       user.auth_token = access_token
@@ -39,9 +50,8 @@ class Jikkyll < Sinatra::Base
     redirect "#{ENV['FRONT_END']}?access_token=#{access_token}"
   end
 
-  get '/users/:id' do
-    user = User.where(id: params[:id]).first
-    api_response({ :user => user.values })
-  end
+  create_resource(User, 'users')
+  create_resource(Repo, 'repos')
+  create_resource(RepoFile, 'files')
 
 end

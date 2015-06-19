@@ -1,7 +1,6 @@
 module JikkyllHelpers
 
   def api_response(value = {})
-    content_type detect_accept_header
     value.to_json
   end
 
@@ -29,6 +28,16 @@ module JikkyllHelpers
 
     token_request = HTTParty.post('https://github.com/login/oauth/access_token', query)
     JSON.parse(token_request.body)['access_token']
+  end
+
+  def respond_with data, enclosure
+    response = {}
+    response[enclosure.to_sym] = data
+    response.to_json
+  end
+
+  def authorized? access_token
+
   end
 
 end
