@@ -1,8 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.3.8)
     dotenv (2.0.1)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
     json (1.8.3)
+    multipart-post (2.0.0)
+    octokit (3.8.0)
+      sawyer (~> 0.6.0, >= 0.5.3)
     pg (0.18.2)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
@@ -17,6 +23,9 @@ GEM
     redis (3.2.1)
     redis-objects (1.2.0)
       redis (>= 3.0.2)
+    sawyer (0.6.0)
+      addressable (~> 2.3.5)
+      faraday (~> 0.8, < 0.10)
     sequel (4.23.0)
     sinatra (1.4.6)
       rack (~> 1.4)
@@ -31,6 +40,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   json
+  octokit
   pg
   puma
   rack
