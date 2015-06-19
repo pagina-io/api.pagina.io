@@ -15,6 +15,9 @@ require 'sequel/extensions/pagination'
 
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '.'))
 
+require './initializers/postgres'
+require './initializers/redis'
+
 require './app/helpers'
 require './config/version'
 require './app/jikkyll'
