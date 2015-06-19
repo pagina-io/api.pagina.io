@@ -17,15 +17,16 @@ class Jikkyll < Sinatra::Base
   end
 
   get '/auth/github/callback' do
-    gh_user = github_client(get_access_token(params[:code])).user
+    access_token = get_access_token(params[:code])
+    gh_user = github_client(access_token).user
     user = User.where(github_id: gh_user[:id]).first
 
     if user
-      user.auth_token = token
+      user.auth_token = access_token
       user.save
     else
       user = User.create(
-        auth_token: token,
+        auth_token: access_token,
         ip: request.ip,
         github_data: gh_user.to_h,
         username: gh_user.login,
@@ -35,12 +36,11 @@ class Jikkyll < Sinatra::Base
       )
     end
 
-    redirect "#{ENV['FRONT_END']}?access_token=#{token}"
+    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}"
   end
 
   get '/users/:id' do
     user = User.where(id: params[:id]).first
-    puts user.inspect
     api_response({ :user => user.values })
   end
 
