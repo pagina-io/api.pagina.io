@@ -16,6 +16,7 @@ namespace :db do
 
   desc "Database table creation"
   task :setup do
+    DB.drop_table :users
     require "./config/schema"
   end
 
