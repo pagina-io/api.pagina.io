@@ -1,4 +1,4 @@
-class Repo < Sequel::Model
+class RepoFile < Sequel::Model
 
   include Redis::Objects
   include Serializable

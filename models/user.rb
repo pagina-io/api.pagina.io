@@ -1,13 +1,17 @@
 class User < Sequel::Model
 
-  def before_save
-    timestamps!
-    super
-  end
+  include Redis::Objects
+  include Serializable
+  include StandardModel
 
-  def timestamps!
-    self.created_at = DateTime.now if self.new?
-    self.updated_at = DateTime.now
+  list :repos
+
+  class << self
+
+    def me access_token
+      self.first(access_token: access_token)
+    end
+
   end
 
 end
