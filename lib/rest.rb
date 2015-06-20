@@ -20,6 +20,8 @@ module REST
     get "/#{path}/?" do
       if resource.authorized?(params[:access_token])
         _resources = resource.all
+      else
+        _resources = []
       end
 
       REST.respond_with(_resources, path)

@@ -1,33 +1,33 @@
 module JikkyllHelpers
 
-  def api_response(value = {})
-    value.to_json
+  def api_response(object = {})
+    if object.is_a?(Array)
+      object.inject([]) do |hash, row|
+        hash << recurse_through_object(row)
+        hash
+      end.to_json
+    else
+      recurse_through_object(object).to_json
+    end
   end
 
-  def detect_accept_header
-    accepts = env['HTTP_ACCEPT'].split(',')
-    return accepts.include?('application/json') ? :json : :text
+  def recurse_through_object(object = {})
+    if is_a_data_class?(object)
+      return object
+    elsif object.is_a?(Array)
+      return object.inject([]) do |arr, row|
+        arr << recurse_through_object(row)
+      end
+    else
+      return object.to_h.inject({}) do |hash, (k, v)|
+        hash[k] = recurse_through_object(v)
+        hash
+      end
+    end
   end
 
-  def github_client token
-    Octokit::Client.new(access_token: token)
-  end
-
-  def get_access_token code
-    query = {
-      :body => {
-        :client_id => ENV["GITHUB_CLIENT_ID"],
-        :client_secret => ENV["GITHUB_SECRET"],
-        :code => code
-      },
-
-      :headers => {
-        'Accept' => 'application/json'
-      }
-    }
-
-    token_request = HTTParty.post('https://github.com/login/oauth/access_token', query)
-    JSON.parse(token_request.body)['access_token']
+  def is_a_data_class?(klass)
+    %w(String TrueClass FalseClass Fixnum Time).include?(klass.class.name)
   end
 
 end
