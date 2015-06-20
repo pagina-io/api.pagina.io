@@ -1,7 +1,5 @@
 class Jikkyll < Sinatra::Base
 
-  set :root, ENV['APP_ROOT']
-
   use Rack::Session::Cookie, secret: ENV['COOKIE_SECRET']
   use Rack::PostBodyContentTypeParser
 
@@ -10,6 +8,7 @@ class Jikkyll < Sinatra::Base
 
   before do
     content_type :json
+
     headers(
       'Access-Control-Allow-Origin' => '*',
       'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
@@ -19,7 +18,7 @@ class Jikkyll < Sinatra::Base
   set :protection, false
 
   get '/' do
-    api_response({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] })
+    ({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] }).to_json
   end
 
   get '/auth/github' do
@@ -28,8 +27,8 @@ class Jikkyll < Sinatra::Base
   end
 
   get '/auth/github/callback' do
-    access_token = get_access_token(params[:code])
-    gh_user = github_client(access_token).user
+    access_token = Github.get_access_token(params[:code])
+    gh_user = Github.client(access_token).user
     user = User.first(github_id: gh_user[:id])
 
     if user
@@ -48,6 +47,18 @@ class Jikkyll < Sinatra::Base
     end
 
     redirect "#{ENV['FRONT_END']}?access_token=#{access_token}"
+  end
+
+  %w(get post).each do |method|
+    send method.to_sym, '/git*' do
+      metadata = {
+        :method => request.env['REQUEST_METHOD'],
+        :uri => request.env['REQUEST_PATH'][4..-1],
+      }
+
+      api_request = Github.proxy(metadata, params[:access_token])
+      api_response({ :metadata => metadata, :result => api_request })
+    end
   end
 
   create_resource(User, 'users')

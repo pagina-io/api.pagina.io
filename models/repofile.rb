@@ -1,5 +1,7 @@
 class RepoFile < Sequel::Model
 
+  many_to_one :repo
+
   include Redis::Objects
   include Serializable
   include StandardModel
