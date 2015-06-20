@@ -4,14 +4,14 @@ class User < Sequel::Model
   include Serializable
   include StandardModel
 
+  self._readable = [:id, :auth_token, :created_at, :updated_at, :username, :avatar_url, :email, :github_id]
+  self._writable = [:auth_token, :username, :avatar_url, :email]
+
   list :repos
 
-  class << self
-
-    def me access_token
-      self.first(access_token: access_token)
-    end
-
+  def authorized?(_access_token)
+    return true if _access_token == self.auth_token
+    false
   end
 
 end
