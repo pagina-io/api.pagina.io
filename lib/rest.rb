@@ -42,7 +42,10 @@ module REST
 
     post "/#{path}/?" do
       if resource.authorized?(params[:access_token])
-        _resource = resource.create(resource.filter(params)).readable
+        _resource = resource.new(resource.filter(params))
+        _resource._access_token = params[:access_token]
+        _resource.save
+        _resource = _resource.readable
         status 201
       else
         _resource = ''

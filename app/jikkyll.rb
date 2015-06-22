@@ -57,12 +57,32 @@ class Jikkyll < Sinatra::Base
       }
 
       api_request = Github.proxy(metadata, params[:access_token])
-      api_response({ :metadata => metadata, :result => api_request })
+      api_response({ :meta => metadata, :result => api_request })
     end
+  end
+
+  get '/repos/:id/scan/?' do
+    gh = Github.client(params[:access_token])
+    gh_repos = gh.repos
+
+    repos_with_pages = []
+
+    gh_repos.each do |repo|
+      begin
+        gh.pages(repo.full_name)
+        if gh.contents(repo.full_name, :path => '/_config.yml', :ref => 'gh-pages')
+          repos_with_pages << { :name => repo.name }
+        end
+      rescue Octokit::NotFound
+        # Do nothing, since there is no pages for this repo
+      end
+    end
+
+    api_response({ :repos => repos_with_pages })
   end
 
   create_resource(User, 'users')
   create_resource(Repo, 'repos')
-  create_resource(RepoFile, 'files')
+  create_resource(Repofile, 'files')
 
 end

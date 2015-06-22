@@ -1,4 +1,4 @@
-class RepoFile < Sequel::Model
+class Repofile < Sequel::Model
 
   many_to_one :repo
 

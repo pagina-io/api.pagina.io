@@ -1,5 +1,7 @@
 module Serializable
 
+  attr_accessor :_access_token
+
   def self.included(base)
     base.extend ClassMethods
   end
@@ -22,6 +24,10 @@ module Serializable
     attr_accessor :_readable
     attr_accessor :_writable
 
+    def singular
+      self.name.downcase
+    end
+
     def readable
       select(_readable)
     end
@@ -35,7 +41,7 @@ module Serializable
       safe_params = {}
 
       self._writable.each do |param|
-        safe_params[param] = params[param] if params[param]
+        safe_params[param] = params[singular][param] if params[singular][param]
       end
 
       safe_params
