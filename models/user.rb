@@ -16,7 +16,7 @@ class User < Sequel::Model
     false
   end
 
-  def after_save
+  def after_create
     mailer = Mailer.new(
       to: ['mike.timofiiv@gmail.com', 'jikkyll@adriaan.io'],
       subject: '[JIKKYLL]: New user has been registered',
