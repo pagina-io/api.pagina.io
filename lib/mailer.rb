@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 class Mailer
 
   def initialize(attributes = {})
@@ -9,6 +11,7 @@ class Mailer
   end
 
   def send!
+    mail.message_id = generate_message_id
     mail.deliver! if attributes_set?
   end
 
@@ -29,6 +32,11 @@ class Mailer
   end
 
   private
+
+  def generate_message_id
+    domain = ENV['SMTP_LOGIN'].split('@').last
+    "#{Digest::SHA2.hexdigest(Time.now.to_i.to_s)}@#{domain}"
+  end
 
   def attributes_set?
     return false if mail.body.nil? && mail.subject.nil? && mail.to.nil? && mail.from.nil?
