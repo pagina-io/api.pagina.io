@@ -16,4 +16,15 @@ class User < Sequel::Model
     false
   end
 
+  def after_create
+    mailer = Mailer.new(
+      to: ['mike.timofiiv@gmail.com'],
+      subject: '[JIKKYLL]: New user has been registered!',
+      from: 'apps@fiiv.io',
+      body: "A new user has been registered on Jikkyll!"
+    )
+    mailer.send!
+    super
+  end
+
 end
