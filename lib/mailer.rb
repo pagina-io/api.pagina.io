@@ -1,5 +1,13 @@
 class Mailer
 
+  def initialize(attributes = {})
+    if attributes != {}
+      [:to, :from, :subject, :body].each do |attribute|
+        mail.send(attribute, attributes[attribute]) if attributes[attribute]
+      end
+    end
+  end
+
   def send!
     mail.deliver! if attributes_set?
   end
@@ -18,10 +26,6 @@ class Mailer
 
   def body=(value)
     mail.body = value
-  end
-
-  def template=(value = 'mailer.generic')
-    template = value
   end
 
   private
