@@ -35,6 +35,8 @@ DB.create_table :repofiles do
   primary_key :id
   foreign_key :repo_id, :repos
 
+  column :filename, String
+
   column :created_at, DateTime
   column :updated_at, DateTime
 
