@@ -1,19 +1,31 @@
 module REST
 
-  def self.respond_with data, enclosure
-    response = {}
-
+  def self.respond_with(data, enclosure = nil)
     if data.is_a?(Array)
-      response[enclosure.to_sym] = []
-
-      data.each do |row|
-        response[enclosure.to_sym] << row.readable
+      response = data.inject([]) do |array, value|
+        array << REST.respond_with(value)
+        array
+      end
+    elsif data.class.ancestors.include?(Enumerable)
+      response = data.inject({}) do |hash, (key, value)|
+        hash[key] = REST.respond_with(value)
+        hash
+      end
+    elsif data.class.ancestors.include?(Sequel::Model)
+      response = data.values.inject({}) do |hash, (key, value)|
+        hash[key] = REST.respond_with(value)
+        hash
       end
     else
-      response[enclosure.to_sym] = data
+      response = data
     end
 
-    response.to_json
+    return response if enclosure.nil?
+
+    enclosed = {}
+    enclosed[enclosure] = response
+
+    return enclosed.to_json
   end
 
   def create_resource resource, path
@@ -59,7 +71,8 @@ module REST
       _resource = resource.first(id: params[:id].to_i)
 
       if _resource.authorized?(params[:access_token])
-        _resource.update(resourse.filter(params)).readable
+        _resource.update(resource.filter(params))
+        _resource = _resource.readable
       else
         status 401
         _resource = ''

@@ -1,4 +1,4 @@
-DB.create_table :users do
+DB.create_table? :users do
 
   primary_key :id
 
@@ -15,7 +15,7 @@ DB.create_table :users do
 
 end
 
-DB.create_table :repos do
+DB.create_table? :repos do
 
   primary_key :id
   foreign_key :user_id, :users
@@ -24,13 +24,14 @@ DB.create_table :repos do
   column :name, String
   column :description, String
   column :url, String
+  column :github_id, Integer
 
   column :created_at, DateTime
   column :updated_at, DateTime
 
 end
 
-DB.create_table :repofiles do
+DB.create_table? :repofiles do
 
   primary_key :id
   foreign_key :repo_id, :repos

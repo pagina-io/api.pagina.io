@@ -83,6 +83,6 @@ class Jikkyll < Sinatra::Base
 
   create_resource(User, 'users')
   create_resource(Repo, 'repos')
-  create_resource(Repofile, 'files')
+  create_resource(Repofile, 'repofiles')
 
 end

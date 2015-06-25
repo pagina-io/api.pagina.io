@@ -6,7 +6,7 @@ class Repofile < Sequel::Model
   include Serializable
   include StandardModel
 
-  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content, :filename]
+  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content]
   self._writable = [:contents, :filename]
 
   def authorized?(_access_token)
@@ -14,10 +14,10 @@ class Repofile < Sequel::Model
     false
   end
 
-  def contents
+  def content
     gh = Github.client(self.repo.user.auth_token)
     gh_content = gh.contents(repo_name, :path => self.filename, :ref => 'gh-pages')
-    gh_content.content
+    Base64.decode64(gh_content.content)
   end
 
   def repo_name
