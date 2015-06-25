@@ -20,8 +20,13 @@ class Repo < Sequel::Model
     super
   end
 
-  def before_save
+  def after_create
     populate_files
+    super
+  end
+
+  def before_destroy
+    Repofile.where(repo_id: self.id).each {|f| f.destroy }
     super
   end
 
@@ -33,6 +38,7 @@ class Repo < Sequel::Model
     self.user_id = User.first(github_id: gh.user[:id]).id rescue nil
     self.github_data = gh_repo.to_h
     self.description = gh_repo.description
+    self.github_id = gh_repo.id
     self.url = gh_repo.url
   end
 
