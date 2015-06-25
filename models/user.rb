@@ -9,8 +9,6 @@ class User < Sequel::Model
   self._readable = [:id, :auth_token, :created_at, :updated_at, :username, :avatar_url, :email, :github_id, :repos]
   self._writable = [:auth_token, :username, :avatar_url, :email]
 
-  list :repos
-
   def authorized?(_access_token)
     return true if _access_token == self.auth_token
     false
@@ -18,9 +16,9 @@ class User < Sequel::Model
 
   def after_create
     mailer = Mailer.new(
-      to: ['mike.timofiiv@gmail.com', 'jikkyll@adriaan.io'],
+      to: ENV['EMAIL_ALERTS_TO'].split(','),
       subject: '[JIKKYLL]: New user has been registered',
-      from: 'apps@fiiv.io',
+      from: 'Jikkyllbot <apps@fiiv.io>',
       body: "A new user has been registered on Jikkyll.\nGithub username of #{self.username}\nJikkyll User ID: #{self.id}\nRegards,\n\njikkyllbot"
     )
     mailer.send!
