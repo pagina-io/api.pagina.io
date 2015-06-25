@@ -22,12 +22,9 @@ namespace :db do
   end
 
   desc "Drop all the tables"
-  task :drop do
-    puts "Dropping database tables..."
-
-    DB.drop_table? :repofiles
-    DB.drop_table? :repos
-    DB.drop_table? :users
+  task :drop, :table do |t, args|
+    puts "Dropping table `#{args[:table]}`..."
+    DB.drop_table? args[:table].to_sym
   end
 
 end
