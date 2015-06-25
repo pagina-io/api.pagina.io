@@ -8,7 +8,7 @@ class Repo < Sequel::Model
   include StandardModel
 
   self._readable = [:id, :created_at, :updated_at, :name, :description, :url, :repofiles, :user_id]
-  self._writable = [:name, :description]
+  self._writable = [:name, :user_id]
 
   def authorized?(_access_token)
     return true if _access_token == self.user.auth_token
