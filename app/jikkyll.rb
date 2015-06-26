@@ -58,7 +58,7 @@ class Jikkyll < Sinatra::Base
       )
     end
 
-    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}&username=#{gh_user.login}"
+    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}&username=#{gh_user.login}&user_id=#{user.id.to_s}"
   end
 
   %w(get post).each do |method|
