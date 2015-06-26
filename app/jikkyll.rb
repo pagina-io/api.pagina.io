@@ -11,9 +11,20 @@ class Jikkyll < Sinatra::Base
   before do
     content_type :json
 
+    puts env
+
     headers(
-      'Access-Control-Allow-Origin' => '*',
-      'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+      'Access-Control-Allow-Origin' => ENV['FRONT_END'] || '*',
+      'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+      'Access-Control-Allow-Credentials' => true,
+      'Access-Control-Allow-Headers' => [
+        'Access-Control-Allow-Origin',
+        'Access-Control-Allow-Methods',
+        'Access-Control-Allow-Headers',
+        'Authorization',
+        'Content-Type',
+        'Access-Control-Allow-Credentials'
+      ]
     )
   end
 
@@ -58,7 +69,7 @@ class Jikkyll < Sinatra::Base
       )
     end
 
-    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}&username=#{gh_user.login}&user_id=#{user.id.to_s}"
+    redirect "#{ENV['FRONT_END']}/callback?access_token=#{access_token}&username=#{gh_user.login}&user_id=#{user.id.to_s}"
   end
 
   %w(get post).each do |method|
