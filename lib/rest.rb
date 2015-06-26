@@ -97,6 +97,7 @@ module REST
       _resource = resource.first(id: params[:id].to_i)
 
       if _resource.authorized?(params[:access_token])
+        _resource._access_token = params[:access_token]
         _resource.destroy
         status 204
       else
