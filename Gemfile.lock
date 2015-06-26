@@ -18,6 +18,7 @@ GEM
     multipart-post (2.0.0)
     octokit (3.8.0)
       sawyer (~> 0.6.0, >= 0.5.3)
+    oj (2.12.9)
     pg (0.18.2)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
@@ -59,9 +60,9 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   httparty
-  json
   mail
   octokit
+  oj
   pg
   puma
   rack

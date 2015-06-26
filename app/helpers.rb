@@ -2,12 +2,12 @@ module JikkyllHelpers
 
   def api_response(object = {})
     if object.is_a?(Array)
-      object.inject([]) do |hash, row|
+      Oj.dump(object.inject([]) do |hash, row|
         hash << recurse_through_object(row)
         hash
-      end.to_json
+      end, mode: :compat)
     else
-      recurse_through_object(object).to_json
+      Oj.dump(recurse_through_object(object), mode: :compat)
     end
   end
 

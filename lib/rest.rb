@@ -32,7 +32,7 @@ module REST
     enclosed = {}
     enclosed[enclosure] = response
 
-    return enclosed.to_json
+    return Oj.dump(enclosed, mode: :compat)
   end
 
   def self.parse_searchables params
