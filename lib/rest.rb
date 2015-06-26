@@ -63,9 +63,13 @@ module REST
       if resource.authorized?(params[:access_token])
         _resource = resource.new(resource.filter(params))
         _resource._access_token = params[:access_token]
-        _resource.save
-        _resource = _resource.readable
-        status 201
+        if _resource.save
+          _resource = _resource.readable
+          status 201
+        else
+          _resource = []
+          status 500
+        end
       else
         _resource = ''
         status 401
@@ -77,12 +81,13 @@ module REST
     put "/#{path}/:id/?" do
       _resource = resource.first(id: params[:id].to_i)
 
-      if _resource.authorized?(params[:access_token])
+      if !_resource.nil? && _resource.authorized?(params[:access_token])
+        _resource._access_token = params[:access_token]
         _resource.update(resource.filter(params))
         _resource = _resource.readable
       else
         status 401
-        _resource = ''
+        _resource = []
       end
 
       REST.respond_with(_resource, path)
