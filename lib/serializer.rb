@@ -23,6 +23,7 @@ module Serializable
   module ClassMethods
     attr_accessor :_readable
     attr_accessor :_writable
+    attr_accessor :_searchable
 
     def singular
       self.name.downcase
@@ -31,6 +32,16 @@ module Serializable
     def authorized?(_access_token = nil)
       return false if _access_token.nil?
       User.first(auth_token: _access_token) ? true : false
+    end
+
+    def search_using(params = {})
+      searchables = {}
+
+      params.each do |key, value|
+        searchables.merge!(self.send(:"search_using_#{key.to_s}", value)) if self._searchable.include?(key)
+      end
+
+      self.where(searchables)
     end
 
     def filter(params = {})
