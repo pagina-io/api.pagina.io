@@ -22,6 +22,7 @@ class Jikkyll < Sinatra::Base
   end
 
   options '/*' do
+    content_type :json
     ''
   end
 
