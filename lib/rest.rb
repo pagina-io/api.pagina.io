@@ -1,7 +1,7 @@
 module REST
 
   def self.respond_with(data, enclosure = nil)
-    if data.is_a?(Array)
+    if data.is_a?(Sequel::Dataset) || data.is_a?(Array)
       response = data.inject([]) do |array, value|
         array << REST.respond_with(value)
         array
@@ -28,10 +28,17 @@ module REST
     return enclosed.to_json
   end
 
+  def self.parse_searchables params
+    params.inject({}) do |hash, (key, value)|
+      hash[key] = value if key.to_s.include?('_id')
+      hash
+    end
+  end
+
   def create_resource resource, path
     get "/#{path}/?" do
-      if resource.authorized?(params[:access_token])
-        _resources = resource.all
+      if resource.authorized?(params[:access_token]) && REST.parse_searchables(params).count > 0
+        _resources = resource.where(REST.parse_searchables(params))
       else
         _resources = []
       end
