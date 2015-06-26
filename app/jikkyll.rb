@@ -11,8 +11,6 @@ class Jikkyll < Sinatra::Base
   before do
     content_type :json
 
-    puts env
-
     headers(
       'Access-Control-Allow-Origin' => ENV['FRONT_END'] || '*',
       'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -31,7 +29,7 @@ class Jikkyll < Sinatra::Base
   set :protection, false
 
   get '/' do
-    ({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] }).to_json
+    Oj.dump(({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] }), mode: :compat)
   end
 
   options '/*' do
@@ -41,7 +39,7 @@ class Jikkyll < Sinatra::Base
 
   error do
     status 500
-    ({ :status => 'error', :message => env['sinatra.error'] }).to_json
+    Oj.dump(({ :status => 'error', :message => env['sinatra.error'] }), mode: :compat)
   end
 
   get '/auth/github' do
