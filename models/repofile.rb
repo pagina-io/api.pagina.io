@@ -6,16 +6,12 @@ class Repofile < Sequel::Model
   include Serializable
   include StandardModel
 
-  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :blob_hash]
+  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id]
   self._writable = [:content, :filename, :repo_id]
 
   def authorized?(_access_token)
     return true if _access_token == self.repo.user.auth_token
     false
-  end
-
-  def before_create
-    get_blob
   end
 
   def readable(*args)
