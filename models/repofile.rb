@@ -6,7 +6,7 @@ class Repofile < Sequel::Model
   include Serializable
   include StandardModel
 
-  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id]
+  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content]
   self._writable = [:content, :filename, :repo_id]
   self._searchable = [:repo_name, :filename]
 
@@ -23,12 +23,6 @@ class Repofile < Sequel::Model
   def before_save
     create_file('') unless self.content rescue false
     super
-  end
-
-  def readable(*args)
-    context = super
-    context.merge!(content: self.content) if args.include?(:single)
-    context
   end
 
   def content=(_content)
