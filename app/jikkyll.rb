@@ -46,7 +46,7 @@ class Jikkyll < Sinatra::Base
       )
     end
 
-    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}"
+    redirect "#{ENV['FRONT_END']}?access_token=#{access_token}&username=#{gh_user.login}"
   end
 
   %w(get post).each do |method|
@@ -61,7 +61,7 @@ class Jikkyll < Sinatra::Base
     end
   end
 
-  get '/repos/:id/scan/?' do
+  get '/users/:id/scanrepos/?' do
     gh = Github.client(params[:access_token])
     gh_repos = gh.repos
 
