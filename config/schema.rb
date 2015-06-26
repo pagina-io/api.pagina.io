@@ -37,7 +37,6 @@ DB.create_table? :repofiles do
   foreign_key :repo_id, :repos
 
   column :filename, String
-  column :blob_hash, String
 
   column :created_at, DateTime
   column :updated_at, DateTime
