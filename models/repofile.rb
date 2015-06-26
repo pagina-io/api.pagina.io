@@ -41,7 +41,6 @@ class Repofile < Sequel::Model
       repo_name,
       self.filename,
       "Jikkyll: creating #{self.filename}",
-      # Base64.strict_encode64(_content),
       _content,
       :branch => 'gh-pages'
     )
@@ -57,7 +56,6 @@ class Repofile < Sequel::Model
       self.filename,
       "Jikkyll: updating #{self.filename}",
       most_recent_blob_hash,
-      # Base64.strict_encode64(_content),
       _content,
       :branch => 'gh-pages'
     )
