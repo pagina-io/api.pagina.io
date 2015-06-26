@@ -3,6 +3,8 @@ class Jikkyll < Sinatra::Base
   use Rack::Session::Cookie, secret: ENV['COOKIE_SECRET']
   use Rack::PostBodyContentTypeParser
 
+  set :show_exceptions, false
+
   helpers JikkyllHelpers
   register REST
 
@@ -24,6 +26,11 @@ class Jikkyll < Sinatra::Base
   options '/*' do
     content_type :json
     ''
+  end
+
+  error do
+    status 500
+    ({ :status => 'error', :message => env['sinatra.error'] }).to_json
   end
 
   get '/auth/github' do
