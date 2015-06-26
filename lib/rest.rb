@@ -12,8 +12,8 @@ module REST
         hash
       end
     elsif data.class.ancestors.include?(Sequel::Model)
-      response = data.values.inject({}) do |hash, (key, value)|
-        hash[key] = REST.respond_with(value)
+      response = data.readable.inject({}) do |hash, (key, value)|
+        hash[key] = REST.respond_with(value) if data.class._readable.include?(key)
         hash
       end
     else
@@ -30,7 +30,7 @@ module REST
 
   def self.parse_searchables params
     params.inject({}) do |hash, (key, value)|
-      hash[key] = value if key.to_s.include?('_id')
+      hash[key.to_sym] = value.to_i if key.to_s.include?('_id')
       hash
     end
   end
@@ -53,7 +53,7 @@ module REST
         status 401
         _resource = []
       else
-        _resource = _resource.readable
+        _resource = _resource.readable(:single)
       end
 
       REST.respond_with(_resource, path)
