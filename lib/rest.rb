@@ -1,5 +1,12 @@
 module REST
 
+  def self.bearer_token(header, params)
+    puts
+    return false if header.nil? && params[:access_token].nil?
+    return params[:access_token] unless params[:access_token].nil?
+    header.split(' ').last
+  end
+
   def self.respond_with(data, enclosure = nil)
     if data.is_a?(Sequel::Dataset) || data.is_a?(Array)
       response = data.inject([]) do |array, value|
@@ -37,7 +44,9 @@ module REST
 
   def create_resource resource, path
     get "/#{path}/?" do
-      if resource.authorized?(params[:access_token]) && REST.parse_searchables(params).count > 0
+      token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
+
+      if resource.authorized?(token) && REST.parse_searchables(params).count > 0
         _resources = resource.where(REST.parse_searchables(params))
       else
         _resources = []
@@ -47,9 +56,10 @@ module REST
     end
 
     get "/#{path}/:id/?" do
+      token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
       _resource = resource.first(id: params[:id].to_i)
 
-      if !_resource.authorized?(params[:access_token])
+      if !_resource.authorized?(token)
         status 401
         _resource = []
       else
@@ -60,9 +70,11 @@ module REST
     end
 
     post "/#{path}/?" do
-      if resource.authorized?(params[:access_token])
+      token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
+
+      if resource.authorized?(token)
         _resource = resource.new(resource.filter(params))
-        _resource._access_token = params[:access_token]
+        _resource._access_token = token
         if _resource.save
           _resource = _resource.readable
           status 201
@@ -79,10 +91,11 @@ module REST
     end
 
     put "/#{path}/:id/?" do
+      token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
       _resource = resource.first(id: params[:id].to_i)
 
-      if !_resource.nil? && _resource.authorized?(params[:access_token])
-        _resource._access_token = params[:access_token]
+      if !_resource.nil? && _resource.authorized?(token)
+        _resource._access_token = token
         _resource.update(resource.filter(params))
         _resource = _resource.readable
       else
@@ -94,10 +107,11 @@ module REST
     end
 
     delete "/#{path}/:id/?" do
+      token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
       _resource = resource.first(id: params[:id].to_i)
 
-      if _resource.authorized?(params[:access_token])
-        _resource._access_token = params[:access_token]
+      if _resource.authorized?(token)
+        _resource._access_token = token
         _resource.destroy
         status 204
       else
