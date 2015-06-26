@@ -29,7 +29,10 @@ module Serializable
     end
 
     def readable
-      select(_readable)
+      select(_readable.inject([]) do |array, value|
+        array << value if self.columns.include?(value)
+        array
+      end)
     end
 
     def authorized?(_access_token = nil)

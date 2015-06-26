@@ -21,6 +21,10 @@ class Jikkyll < Sinatra::Base
     ({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] }).to_json
   end
 
+  options '/*' do
+    ''
+  end
+
   get '/auth/github' do
     scopes = 'user,repo'
     redirect "https://github.com/login/oauth/authorize?client_id=#{ENV['GITHUB_CLIENT_ID']}&scope=#{scopes}"
