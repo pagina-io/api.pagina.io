@@ -14,6 +14,11 @@ class Repofile < Sequel::Model
     false
   end
 
+  def self.content=(data)
+    gh = Github.client(self.repo.user.auth_token)
+    
+  end
+
   def content
     gh = Github.client(self.repo.user.auth_token)
     gh_content = gh.contents(repo_name, :path => self.filename, :ref => 'gh-pages')
