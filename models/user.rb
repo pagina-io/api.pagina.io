@@ -8,6 +8,7 @@ class User < Sequel::Model
 
   self._readable = [:id, :auth_token, :created_at, :updated_at, :username, :avatar_url, :email, :github_id, :repos]
   self._writable = [:auth_token, :username, :avatar_url, :email]
+  self._searchable = []
 
   def authorized?(_access_token)
     return true if _access_token == self.auth_token

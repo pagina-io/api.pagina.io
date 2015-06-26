@@ -37,7 +37,7 @@ module REST
 
   def self.parse_searchables params
     params.inject({}) do |hash, (key, value)|
-      hash[key.to_sym] = value.to_i if key.to_s.include?('_id')
+      hash[key.to_sym] = value
       hash
     end
   end
@@ -47,7 +47,7 @@ module REST
       token = REST.bearer_token(env['HTTP_AUTHORIZATION'], params)
 
       if resource.authorized?(token) && REST.parse_searchables(params).count > 0
-        _resources = resource.where(REST.parse_searchables(params))
+        _resources = resource.search_using(REST.parse_searchables(params))
       else
         _resources = []
       end

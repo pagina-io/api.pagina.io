@@ -8,6 +8,7 @@ class Repofile < Sequel::Model
 
   self._readable = [:id, :created_at, :updated_at, :filename, :repo_id]
   self._writable = [:content, :filename, :repo_id]
+  self._searchable = [:repo_name, :filename]
 
   def authorized?(_access_token)
     return true if _access_token == self.repo.user.auth_token
@@ -90,6 +91,15 @@ class Repofile < Sequel::Model
 
   def repo_name
     "#{self.repo.user.username}/#{self.repo.name}"
+  end
+
+  def self.search_using_repo_name _name
+    _repo_id = Repo.first(name: _name).id
+    { :repo_id => _repo_id }
+  end
+
+  def self.search_using_filename _name
+    { :filename => _name }
   end
 
 end
