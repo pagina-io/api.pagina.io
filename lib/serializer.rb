@@ -10,7 +10,7 @@ module Serializable
     true # by default, allow access - implement method in actual models
   end
 
-  def readable
+  def readable(*args)
     safe_params = {}
 
     self.class._readable.each do |param|
@@ -26,13 +26,6 @@ module Serializable
 
     def singular
       self.name.downcase
-    end
-
-    def readable
-      select(_readable.inject([]) do |array, value|
-        array << value if self.columns.include?(value)
-        array
-      end)
     end
 
     def authorized?(_access_token = nil)
