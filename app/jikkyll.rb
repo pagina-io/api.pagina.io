@@ -86,13 +86,13 @@ class Jikkyll < Sinatra::Base
     gh = Github.client(params[:access_token])
     gh_repos = gh.repos
 
-    repos_with_pages = []
+    repos = []
 
     gh_repos.each do |repo|
-      repos_with_pages << { :name => repo.full_name }
+      repos << { :name => repo.name, :owner => repo.owner.login }
     end
 
-    api_response({ :repos => repos_with_pages })
+    api_response({ :repos => repos })
   end
 
   get '/github/repos/:owner/:repo/?' do
