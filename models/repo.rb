@@ -70,4 +70,12 @@ class Repo < Sequel::Model
     return result
   end
 
+  def self.search_using_name _name
+    { :name => _name }
+  end
+
+  def self.search_using_user_id _user_id
+    { :user_id => _user_id }
+  end
+
 end
