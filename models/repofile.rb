@@ -11,6 +11,8 @@ class Repofile < Sequel::Model
   self._searchable = [:repo_name, :filename]
   self._exclude_from_search = [:content]
 
+  attr_accessor :dont_get_content
+
   def authorized?(_access_token)
     return true if _access_token == self.repo.user.auth_token
     false
@@ -22,11 +24,12 @@ class Repofile < Sequel::Model
   end
 
   def before_save
-    (create_file('') unless self.content rescue false) unless self.new?
+    (create_file('') unless self.content rescue false) unless dont_get_content == true
     super
   end
 
   def content
+    puts ">>>>>>> get content"
     Base64.decode64(get_remote_content.content) rescue nil
   end
 
