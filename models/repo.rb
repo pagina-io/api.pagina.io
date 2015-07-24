@@ -9,7 +9,7 @@ class Repo < Sequel::Model
 
   self._readable = [:id, :created_at, :updated_at, :name, :description, :url, :repofiles, :user_id]
   self._writable = [:name, :user_id]
-  self._searchable = []
+  self._searchable = [:name, :user_id]
   self._exclude_from_search = []
 
   def authorized?(_access_token)
