@@ -22,6 +22,7 @@ DB.create_table? :repos do
 
   column :github_data, :hstore
   column :name, String
+  column :owner, String
   column :description, String
   column :url, String
   column :github_id, Integer
