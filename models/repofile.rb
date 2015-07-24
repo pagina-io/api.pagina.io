@@ -6,10 +6,10 @@ class Repofile < Sequel::Model
   include Serializable
   include StandardModel
 
-  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id]
+  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content]
   self._writable = [:content, :filename, :repo_id]
   self._searchable = [:repo_name, :filename]
-  self._exclude_from_search = []
+  self._exclude_from_search = [:content]
 
   attr_accessor :dont_get_content
 
