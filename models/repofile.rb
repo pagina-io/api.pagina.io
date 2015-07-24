@@ -24,17 +24,16 @@ class Repofile < Sequel::Model
   end
 
   def before_save
-    (create_file('') unless self.content rescue false) unless dont_get_content == true
     super
   end
 
   def content
-    Base64.decode64(get_remote_content.content) rescue nil
+    @content ||= Base64.decode64(get_remote_content.content) rescue nil
   end
 
   def content=(_content)
-    return nil if _content.nil? || self.filename.nil?
-    self.new? || most_recent_blob_hash.nil? ? create_file(_content) : update_file_content(_content)
+    @content = _content
+    self.new? || most_recent_blob_hash.nil? ? create_file(@content) : update_file_content(@content)
   end
 
   def create_file _content
@@ -52,6 +51,8 @@ class Repofile < Sequel::Model
 
   def update_file_content _content
     gh = Github.client(self._access_token)
+
+    puts ">>> #{@content}"
 
     gh.update_contents(
       repo_name,

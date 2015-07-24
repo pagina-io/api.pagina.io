@@ -16,9 +16,6 @@ module Serializable
 
     params.reject! {|k| self.class._exclude_from_search.include?(k) } if search
 
-    puts ">>> #{search}"
-    puts params
-
     params.each do |param|
       safe_params[param] = send(param) unless param.nil?
     end
