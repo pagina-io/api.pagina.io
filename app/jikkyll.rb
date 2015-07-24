@@ -71,7 +71,7 @@ class Jikkyll < Sinatra::Base
   end
 
   %w(get post).each do |method|
-    send method.to_sym, '/git*' do
+    send method.to_sym, '/git/*' do
       metadata = {
         :method => request.env['REQUEST_METHOD'],
         :uri => request.env['REQUEST_PATH'][4..-1],
@@ -82,24 +82,37 @@ class Jikkyll < Sinatra::Base
     end
   end
 
-  get '/users/:id/scanrepos/?' do
+  get '/github/repos/?' do
     gh = Github.client(params[:access_token])
     gh_repos = gh.repos
 
     repos_with_pages = []
 
     gh_repos.each do |repo|
-      begin
-        gh.pages(repo.full_name)
-        if gh.contents(repo.full_name, :path => '/_config.yml', :ref => 'gh-pages')
-          repos_with_pages << { :name => repo.name }
-        end
-      rescue Octokit::NotFound
-        # Do nothing, since there is no pages for this repo
-      end
+      repos_with_pages << { :name => repo.full_name }
     end
 
     api_response({ :repos => repos_with_pages })
+  end
+
+  get '/github/repos/:owner/:repo/?' do
+    gh = Github.client(params[:access_token])
+    repo = "#{params[:owner]}/#{params[:repo]}"
+
+    response = []
+
+    begin
+      gh.pages(repo)
+      if gh.contents(repo, :path => '/_config.yml', :ref => 'gh-pages')
+        response = { gh_pages: true }
+      else
+        response = { gh_pages: false }
+      end
+    rescue Octokit::NotFound
+      response = { gh_pages: false }
+    end
+
+    api_response({ :repos => response })
   end
 
   create_resource(User, 'users')

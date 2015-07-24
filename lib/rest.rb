@@ -1,7 +1,6 @@
 module REST
 
   def self.bearer_token(header, params)
-    puts
     return false if header.nil? && params[:access_token].nil?
     return params[:access_token] unless params[:access_token].nil?
     header.split(' ').last

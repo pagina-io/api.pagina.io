@@ -35,7 +35,7 @@ class Repofile < Sequel::Model
     gh.create_contents(
       repo_name,
       self.filename,
-      "Jikkyll: creating #{self.filename}",
+      "#{ENV['APP_NAME']}: creating #{self.filename}",
       _content,
       :branch => 'gh-pages'
     )
@@ -49,7 +49,7 @@ class Repofile < Sequel::Model
     gh.update_contents(
       repo_name,
       self.filename,
-      "Jikkyll: updating #{self.filename}",
+      "#{ENV['APP_NAME']}: updating #{self.filename}",
       most_recent_blob_hash,
       _content,
       :branch => 'gh-pages'
@@ -64,7 +64,7 @@ class Repofile < Sequel::Model
     gh.delete_contents(
       repo_name,
       self.filename,
-      "Jikkyll: removing #{self.filename}",
+      "#{ENV['APP_NAME']}: removing #{self.filename}",
       most_recent_blob_hash,
       :branch => 'gh-pages'
     )

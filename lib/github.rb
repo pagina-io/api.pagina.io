@@ -3,7 +3,7 @@ class Github
   class << self
 
     def client token
-      @client = Octokit::Client.new(access_token: token)
+      @client = Octokit::Client.new(access_token: token, auto_traversal: true, per_page: 100)
     end
 
     def get_access_token code
