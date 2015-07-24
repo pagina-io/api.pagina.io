@@ -86,7 +86,7 @@ class Repofile < Sequel::Model
   end
 
   def repo_name
-    "#{self.repo.user.username}/#{self.repo.name}"
+    "#{self.repo.owner}/#{self.repo.name}"
   end
 
   def self.search_using_repo_name _name
