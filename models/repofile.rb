@@ -6,10 +6,10 @@ class Repofile < Sequel::Model
   include Serializable
   include StandardModel
 
-  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content]
+  self._readable = [:id, :created_at, :updated_at, :filename, :repo_id]
   self._writable = [:content, :filename, :repo_id]
   self._searchable = [:repo_name, :filename]
-  self._exclude_from_search = [:content]
+  self._exclude_from_search = []
 
   attr_accessor :dont_get_content
 
@@ -29,7 +29,6 @@ class Repofile < Sequel::Model
   end
 
   def content
-    puts ">>>>>>> get content"
     Base64.decode64(get_remote_content.content) rescue nil
   end
 
