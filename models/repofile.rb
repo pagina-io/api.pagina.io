@@ -22,12 +22,11 @@ class Repofile < Sequel::Model
   end
 
   def before_save
-    create_file('') unless self.content rescue false
+    (create_file('') unless self.content rescue false) unless self.new?
     super
   end
 
   def content
-    puts "GETTING CONTENT"
     Base64.decode64(get_remote_content.content) rescue nil
   end
 

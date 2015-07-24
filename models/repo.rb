@@ -78,4 +78,8 @@ class Repo < Sequel::Model
     { :user_id => _user_id }
   end
 
+  def self.imported? name, owner
+    self.where(name: name, owner: owner).count > 0
+  end
+
 end
