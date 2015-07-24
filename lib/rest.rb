@@ -18,8 +18,11 @@ module REST
         hash
       end
     elsif data.class.ancestors.include?(Sequel::Model)
-      response = data.readable.inject({}) do |hash, (key, value)|
-        hash[key] = REST.respond_with(value) if data.class._readable.include?(key)
+      response = data.readable(enclosure.nil?).inject({}) do |hash, (key, value)|
+        if data.class._readable.include?(key) && (!enclosure.nil? || !data.class._exclude_from_search.include?(key))
+          hash[key] = REST.respond_with(value)
+        end
+
         hash
       end
     else
@@ -62,7 +65,7 @@ module REST
         status 401
         _resource = []
       else
-        _resource = _resource.readable(:single)
+        _resource = _resource.readable
       end
 
       REST.respond_with(_resource, path)

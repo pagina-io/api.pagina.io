@@ -10,10 +10,13 @@ module Serializable
     true # by default, allow access - implement method in actual models
   end
 
-  def readable(*args)
+  def readable(search = false)
     safe_params = {}
+    params = self.class._readable
 
-    self.class._readable.each do |param|
+    params.reject! {|k| self.class._exclude_from_search.include?(k) } if search
+
+    params.each do |param|
       safe_params[param] = send(param) unless param.nil?
     end
 
@@ -24,6 +27,7 @@ module Serializable
     attr_accessor :_readable
     attr_accessor :_writable
     attr_accessor :_searchable
+    attr_accessor :_exclude_from_search
 
     def singular
       self.name.downcase
