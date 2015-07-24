@@ -46,7 +46,9 @@ class Repo < Sequel::Model
 
   def populate_files
     lookup_directory('/').each do |file|
-      Repofile.create(file)
+      repo_file = Repofile.new(file)
+      repo_file.dont_get_content = true
+      repo_file.save
     end
   end
 
