@@ -12,9 +12,12 @@ module Serializable
 
   def readable(search = false)
     safe_params = {}
-    params = self.class._readable
+    params = self.class._readable.dup
 
     params.reject! {|k| self.class._exclude_from_search.include?(k) } if search
+
+    puts ">>> #{search}"
+    puts params
 
     params.each do |param|
       safe_params[param] = send(param) unless param.nil?
