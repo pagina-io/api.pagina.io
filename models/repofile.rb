@@ -9,6 +9,7 @@ class Repofile < Sequel::Model
   self._readable = [:id, :created_at, :updated_at, :filename, :repo_id, :content]
   self._writable = [:content, :filename, :repo_id]
   self._searchable = [:repo_name, :filename]
+  self._exclude_from_search = [:content]
 
   def authorized?(_access_token)
     return true if _access_token == self.repo.user.auth_token
@@ -23,6 +24,11 @@ class Repofile < Sequel::Model
   def before_save
     create_file('') unless self.content rescue false
     super
+  end
+
+  def content
+    puts "GETTING CONTENT"
+    Base64.decode64(get_remote_content.content) rescue nil
   end
 
   def content=(_content)
@@ -68,10 +74,6 @@ class Repofile < Sequel::Model
       most_recent_blob_hash,
       :branch => 'gh-pages'
     )
-  end
-
-  def content
-    Base64.decode64(get_remote_content.content) rescue nil
   end
 
   def most_recent_blob_hash
