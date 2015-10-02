@@ -30,6 +30,6 @@ require './models/repofile'
 
 require './app/helpers'
 require './config/version'
-require './app/jikkyll'
+require './app/pagina'
 
-run Jikkyll
+run Pagina
