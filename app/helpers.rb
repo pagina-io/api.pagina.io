@@ -1,4 +1,4 @@
-module JikkyllHelpers
+module PaginaHelpers
 
   def api_response(object = {})
     if object.is_a?(Array)

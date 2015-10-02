@@ -1,11 +1,11 @@
-class Jikkyll < Sinatra::Base
+class Pagina < Sinatra::Base
 
   use Rack::Session::Cookie, secret: ENV['COOKIE_SECRET']
   use Rack::PostBodyContentTypeParser
 
   set :show_exceptions, false
 
-  helpers JikkyllHelpers
+  helpers PaginaHelpers
   register REST
 
   before do
@@ -29,7 +29,7 @@ class Jikkyll < Sinatra::Base
   set :protection, false
 
   get '/' do
-    Oj.dump(({ :name => 'Jikyll Alpha API', :version => ENV['JIKKYLL_VERSION'] }), mode: :compat)
+    Oj.dump(({ :name => "#{ENV['APP_NAME']} API", :version => ENV['APP_VERSION'] }), mode: :compat)
   end
 
   options '/*' do
