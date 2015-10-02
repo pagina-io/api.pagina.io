@@ -52,8 +52,6 @@ class Repofile < Sequel::Model
   def update_file_content _content
     gh = Github.client(self._access_token)
 
-    puts ">>> #{@content}"
-
     gh.update_contents(
       repo_name,
       self.filename,
