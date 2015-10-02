@@ -16,6 +16,7 @@ GEM
     multi_json (1.11.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    newrelic_rpm (3.12.1.298)
     octokit (3.8.0)
       sawyer (~> 0.6.0, >= 0.5.3)
     oj (2.12.9)
@@ -61,6 +62,7 @@ DEPENDENCIES
   dotenv
   httparty
   mail
+  newrelic_rpm
   octokit
   oj
   pg

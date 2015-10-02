@@ -16,17 +16,4 @@ class User < Sequel::Model
     false
   end
 
-  def after_create
-    if ENV['SMTP_SERVER']
-      mailer = Mailer.new(
-        to: ENV['EMAIL_ALERTS_TO'].split(','),
-        subject: '[JIKKYLL]: New user has been registered',
-        from: 'Jikkyllbot <apps@fiiv.io>',
-        body: "A new user has been registered on Jikkyll.\nGithub username of #{self.username}\nJikkyll User ID: #{self.id}\nRegards,\n\njikkyllbot"
-      )
-      mailer.send!
-    end
-    super
-  end
-
 end
