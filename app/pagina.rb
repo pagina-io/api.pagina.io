@@ -97,8 +97,13 @@ class Pagina < Sinatra::Base
   
   get '/github/repos/search/?' do
     api_response({ :repos => [] }) if !params[:repo_name]
+    
+    user = User.current_user(params[:access_token])
+    query = "#{params[:repo_name]} user:#{user.username}"
     options = { :per_page => 10 }
-    gh_repos = Github.client(params[:access_token]).search_repositories(params[:repo_name], options)
+    gh_repos = Github.client(params[:access_token]).search_repositories(query, options)
+    
+    puts query
         
     repos = []
     
