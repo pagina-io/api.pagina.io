@@ -1,1 +1,1 @@
-ENV['APP_VERSION'] = '1.0.4'
+ENV['APP_VERSION'] = '1.0.5'
