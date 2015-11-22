@@ -94,6 +94,20 @@ class Pagina < Sinatra::Base
 
     api_response({ :repos => repos })
   end
+  
+  get '/github/repos/search/?' do
+    api_response({ :repos => [] }) if !params[:repo_name]
+    options = { :per_page => 10 }
+    gh_repos = Github.client(params[:access_token]).search_repositories(params[:repo_name], options)
+        
+    repos = []
+    
+    gh_repos[:items].each do |repo|
+      repos << { :name => repo.name, :owner => repo.owner.login, :exists => Repo.imported?(repo.name, repo.owner.login) }
+    end
+    
+    api_response({ :repos => repos })
+  end
 
   get '/github/repos/:owner/:repo/?' do
     gh = Github.client(params[:access_token])

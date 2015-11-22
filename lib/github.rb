@@ -9,8 +9,8 @@ class Github
     def get_access_token code
       query = {
         :body => {
-          :client_id => ENV["GITHUB_CLIENT_ID"],
-          :client_secret => ENV["GITHUB_SECRET"],
+          :client_id => ENV['GITHUB_CLIENT_ID'],
+          :client_secret => ENV['GITHUB_SECRET'],
           :code => code
         },
 
