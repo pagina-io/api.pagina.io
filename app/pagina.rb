@@ -89,7 +89,12 @@ class Pagina < Sinatra::Base
     repos = []
 
     gh_repos.each do |repo|
-      repos << { :name => repo.name, :owner => repo.owner.login, :exists => Repo.imported?(repo.name, repo.owner.login) }
+      repos << {
+        :id => repo.id,
+        :name => repo.name,
+        :owner => repo.owner.login,
+        :exists => Repo.imported?(repo.name, repo.owner.login)
+      }
     end
 
     api_response({ :repos => repos })
@@ -106,7 +111,12 @@ class Pagina < Sinatra::Base
     repos = []
     
     gh_repos[:items].each do |repo|
-      repos << { :name => repo.name, :owner => repo.owner.login, :exists => Repo.imported?(repo.name, repo.owner.login) }
+      repos << {
+        :id => repo.id,
+        :name => repo.name,
+        :owner => repo.owner.login,
+        :exists => Repo.imported?(repo.name, repo.owner.login)
+      }
     end
     
     api_response({ :repos => repos })
