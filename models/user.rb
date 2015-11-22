@@ -15,5 +15,9 @@ class User < Sequel::Model
     return true if _access_token == self.auth_token
     false
   end
+  
+  def self.current_user _access_token
+    self.first(auth_token: _access_token)
+  end
 
 end
