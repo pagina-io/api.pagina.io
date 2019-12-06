@@ -22,7 +22,7 @@ GEM
       sawyer (~> 0.6.0, >= 0.5.3)
     oj (2.13.1)
     pg (0.18.4)
-    puma (2.15.3)
+    puma (3.12.2)
     rack (1.6.4)
     rack-contrib (1.4.0)
       git-version-bump (~> 0.15)
